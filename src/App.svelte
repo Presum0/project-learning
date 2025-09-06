@@ -8,12 +8,26 @@
     return value.replace(/[^0-9+\-*/.\s]/g, '');
   }
   function handleresult() {
-    
+    try {
+      // Replace '×' with '*' and '÷' with '/' for evaluation
+      const expression = inputValue.replace(/×/g, '*').replace(/÷/g, '/');
+      // Use Function constructor to safely evaluate the expression
+      const result = Function(`'use strict'; return (${expression})`)();
+      inputValue = result.toString();
+    } catch (error) {
+      inputValue = 'Error';
+      setTimeout(() => { inputValue = '0'; }, 1000);
+    }
   }
   function handleButtonClick(value) {
+    if (value === '=') {
+      handleresult();
+      return;
+    }
+    
     if (inputValue === '0' && value !== '.') {
       inputValue = value.toString();
-    } else if(value === 'c'){
+    } else if (value === 'c') {
       inputValue = '0';
     } else {
       inputValue += value.toString();
